@@ -433,6 +433,14 @@ TTT	0.886
         self.assertEqual(len(llc_lst), 1)
         self.assertAlmostEqual(llc_lst[0], 0.9528, places=4)
 
+        for sequence in (s, s.lower(), seq):
+            for window in (1, 2, 3, len(s) - 1):
+                expected = [
+                    lcc_simp(sequence[i : i + window])
+                    for i in range(len(sequence) - window + 1)
+                ]
+                self.assertEqual(lcc_mult(sequence, window), expected)
+
 
 if __name__ == "__main__":
     runner = unittest.TextTestRunner(verbosity=2)
