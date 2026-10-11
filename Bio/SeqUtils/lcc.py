@@ -42,78 +42,84 @@ def lcc_mult(seq, wsize):
     lccsal.append(-(term_a + term_c + term_t + term_g))
     tail = seq[0]
     for x in range(tamseq - wsize):
-        window = seq[x + 1 : wsize + x + 1]
-        if tail == window[-1]:
+        # Only the entering and leaving bases change the composition.
+        # Keep the empty-window error behavior for nonpositive sizes.
+        if wsize <= 0:
+            window = seq[x + 1 : wsize + x + 1]
+            head = window[-1]
+        else:
+            head = seq[wsize + x]
+        if tail == head:
             lccsal.append(lccsal[-1])
         elif tail == "A":
             cant_a -= 1
-            if window.endswith("C"):
+            if head == "C":
                 cant_c += 1
                 term_a = compone[cant_a]
                 term_c = compone[cant_c]
                 lccsal.append(-(term_a + term_c + term_t + term_g))
-            elif window.endswith("T"):
+            elif head == "T":
                 cant_t += 1
                 term_a = compone[cant_a]
                 term_t = compone[cant_t]
                 lccsal.append(-(term_a + term_c + term_t + term_g))
-            elif window.endswith("G"):
+            elif head == "G":
                 cant_g += 1
                 term_a = compone[cant_a]
                 term_g = compone[cant_g]
                 lccsal.append(-(term_a + term_c + term_t + term_g))
         elif tail == "C":
             cant_c -= 1
-            if window.endswith("A"):
+            if head == "A":
                 cant_a += 1
                 term_a = compone[cant_a]
                 term_c = compone[cant_c]
                 lccsal.append(-(term_a + term_c + term_t + term_g))
-            elif window.endswith("T"):
+            elif head == "T":
                 cant_t += 1
                 term_c = compone[cant_c]
                 term_t = compone[cant_t]
                 lccsal.append(-(term_a + term_c + term_t + term_g))
-            elif window.endswith("G"):
+            elif head == "G":
                 cant_g += 1
                 term_c = compone[cant_c]
                 term_g = compone[cant_g]
                 lccsal.append(-(term_a + term_c + term_t + term_g))
         elif tail == "T":
             cant_t -= 1
-            if window.endswith("A"):
+            if head == "A":
                 cant_a += 1
                 term_a = compone[cant_a]
                 term_t = compone[cant_t]
                 lccsal.append(-(term_a + term_c + term_t + term_g))
-            elif window.endswith("C"):
+            elif head == "C":
                 cant_c += 1
                 term_c = compone[cant_c]
                 term_t = compone[cant_t]
                 lccsal.append(-(term_a + term_c + term_t + term_g))
-            elif window.endswith("G"):
+            elif head == "G":
                 cant_g += 1
                 term_t = compone[cant_t]
                 term_g = compone[cant_g]
                 lccsal.append(-(term_a + term_c + term_t + term_g))
         elif tail == "G":
             cant_g -= 1
-            if window.endswith("A"):
+            if head == "A":
                 cant_a += 1
                 term_a = compone[cant_a]
                 term_g = compone[cant_g]
                 lccsal.append(-(term_a + term_c + term_t + term_g))
-            elif window.endswith("C"):
+            elif head == "C":
                 cant_c += 1
                 term_c = compone[cant_c]
                 term_g = compone[cant_g]
                 lccsal.append(-(term_a + term_c + term_t + term_g))
-            elif window.endswith("T"):
+            elif head == "T":
                 cant_t += 1
                 term_t = compone[cant_t]
                 term_g = compone[cant_g]
                 lccsal.append(-(term_a + term_c + term_t + term_g))
-        tail = window[0]
+        tail = seq[x + 1]
     return lccsal
 
 
